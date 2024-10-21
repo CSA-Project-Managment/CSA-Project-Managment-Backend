@@ -1,5 +1,9 @@
 package com.nighthawk.spring_portfolio.system;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -14,11 +18,7 @@ import com.nighthawk.spring_portfolio.mvc.person.Person;
 import com.nighthawk.spring_portfolio.mvc.person.PersonDetailsService;
 import com.nighthawk.spring_portfolio.mvc.person.PersonRole;
 import com.nighthawk.spring_portfolio.mvc.person.PersonRoleJpaRepository;
-
-import org.springframework.beans.factory.annotation.Autowired;
-
-import java.util.ArrayList;
-import java.util.List;
+import com.nighthawk.spring_portfolio.mvc.student.Student.StudentService;
 
 @Component
 @Configuration // Scans Application for ModelInit Bean, this detects CommandLineRunner
@@ -27,6 +27,7 @@ public class ModelInit {
     @Autowired NoteJpaRepository noteRepo;
     @Autowired PersonRoleJpaRepository roleJpaRepository;
     @Autowired PersonDetailsService personDetailsService;
+    @Autowired StudentService studentService;
 
     @Bean
     @Transactional
@@ -40,6 +41,8 @@ public class ModelInit {
                 if (jokeFound.size() == 0)
                     jokesRepo.save(new Jokes(null, joke, 0, 0)); //JPA save
             }
+
+            studentService.initializeData();
 
             // Person database is populated with starting people
             Person[] personArray = Person.init();
