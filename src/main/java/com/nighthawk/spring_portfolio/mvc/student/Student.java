@@ -3,6 +3,7 @@ package com.nighthawk.spring_portfolio.mvc.student;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Arrays;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -32,12 +33,14 @@ public class Student {
     private String username;
     private int tableNumber;
     private String course;
+    private ArrayList<String> tasks;
 
-    public Student(String name, String username, int tableNumber, String course) {
+    public Student(String name, String username, int tableNumber, String course, ArrayList<String> tasks) {
         this.name = name;
         this.username = username;
         this.tableNumber = tableNumber;
         this.course = course;
+        this.tasks = tasks;
     }
 
     @Service
@@ -52,10 +55,10 @@ public class Student {
                 throw new RuntimeException("studentJPARepository is not initialized!");
             }
             List<Student> students = new ArrayList<>();
-            students.add(new Student("Akhil Singamneni", "Akhil353", 4, "CSA"));
-            students.add(new Student("Srinivas Nampalli", "srininampalli", 4, "CSA"));
-            students.add(new Student("Aditya Samavedam", "adityasamavedam", 4, "CSA"));
-            students.add(new Student("Nitin Balaji", "nitinsandiego", 4, "CSA"));
+            students.add(new Student("Akhil Singamneni", "Akhil353", 4, "CSA", new ArrayList<String>(Arrays.asList("Task 1", "Task 2"))));
+            students.add(new Student("Srinivas Nampalli", "srininampalli", 4, "CSA", new ArrayList<String>(Arrays.asList("Task 1", "Task 2"))));
+            students.add(new Student("Aditya Samavedam", "adityasamavedam", 4, "CSA", new ArrayList<String>(Arrays.asList("Task 1", "Task 2"))));
+            students.add(new Student("Nitin Balaji", "nitinsandiego", 4, "CSA", new ArrayList<String>(Arrays.asList("Task 1", "Task 2"))));
 
             studentJPARepository.saveAll(students);
         }
