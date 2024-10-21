@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Arrays;
 
+import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -64,7 +65,13 @@ public class Student {
             students.add(new Student("Aditya Samavedam", "adityasamavedam", 4, "CSA", new ArrayList<String>(Arrays.asList("Task 1", "Task 2")), 1, 3));
             students.add(new Student("Nitin Balaji", "nitinsandiego", 4, "CSA", new ArrayList<String>(Arrays.asList("Task 1", "Task 2")), 1, 3));
 
-            studentJPARepository.saveAll(students);
+            for (Student student : students) {
+            Optional<Student> existingStudent = studentJPARepository.findByUsername(student.getUsername());
+            
+            if (existingStudent.isEmpty()) {
+                studentJPARepository.save(student);
+            }
+        }
         }
 
         public Iterable<Student> findAll() {
