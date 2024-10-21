@@ -34,13 +34,17 @@ public class Student {
     private int tableNumber;
     private String course;
     private ArrayList<String> tasks;
+    private int trimester;
+    private int period;
 
-    public Student(String name, String username, int tableNumber, String course, ArrayList<String> tasks) {
+    public Student(String name, String username, int tableNumber, String course, ArrayList<String> tasks, int trimester, int period) {
         this.name = name;
         this.username = username;
         this.tableNumber = tableNumber;
         this.course = course;
         this.tasks = tasks;
+        this.trimester = trimester;
+        this.period = period;
     }
 
     @Service
@@ -55,10 +59,10 @@ public class Student {
                 throw new RuntimeException("studentJPARepository is not initialized!");
             }
             List<Student> students = new ArrayList<>();
-            students.add(new Student("Akhil Singamneni", "Akhil353", 4, "CSA", new ArrayList<String>(Arrays.asList("Task 1", "Task 2"))));
-            students.add(new Student("Srinivas Nampalli", "srininampalli", 4, "CSA", new ArrayList<String>(Arrays.asList("Task 1", "Task 2"))));
-            students.add(new Student("Aditya Samavedam", "adityasamavedam", 4, "CSA", new ArrayList<String>(Arrays.asList("Task 1", "Task 2"))));
-            students.add(new Student("Nitin Balaji", "nitinsandiego", 4, "CSA", new ArrayList<String>(Arrays.asList("Task 1", "Task 2"))));
+            students.add(new Student("Akhil Singamneni", "Akhil353", 4, "CSA", new ArrayList<String>(Arrays.asList("Task 1", "Task 2")), 1, 3));
+            students.add(new Student("Srinivas Nampalli", "srininampalli", 4, "CSA", new ArrayList<String>(Arrays.asList("Task 1", "Task 2")), 1, 3));
+            students.add(new Student("Aditya Samavedam", "adityasamavedam", 4, "CSA", new ArrayList<String>(Arrays.asList("Task 1", "Task 2")), 1, 3));
+            students.add(new Student("Nitin Balaji", "nitinsandiego", 4, "CSA", new ArrayList<String>(Arrays.asList("Task 1", "Task 2")), 1, 3));
 
             studentJPARepository.saveAll(students);
         }
