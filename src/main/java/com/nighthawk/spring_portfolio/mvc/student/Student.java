@@ -77,6 +77,10 @@ public class Student {
         public Iterable<Student> findAll() {
             return studentJPARepository.findAll();
         }
+
+        public List<Student> findByNameCourseTrimesterPeriod(String name, String course, int trimester, int period) {
+            return studentJPARepository.findByNameCourseTrimesterPeriod(name, course, trimester, period);
+        }
     }
 
 }
