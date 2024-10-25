@@ -1,9 +1,11 @@
 package com.nighthawk.spring_portfolio.mvc.student;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -46,6 +48,18 @@ public class StudentApiController {
             return ResponseEntity.ok(createdStudent);
         } catch (RuntimeException e) {
             return ResponseEntity.badRequest().body(null);
+        }
+    }
+
+    @DeleteMapping("/delete")
+    public ResponseEntity<String> deleteStudentByUsername(@RequestParam String username) {
+        Optional<Student> student = studentService.findByUsername(username);
+        
+        if (student.isPresent()) {
+            studentService.deleteById(student.get().getId());  // Delete student by ID
+            return ResponseEntity.ok("Student with username '" + username + "' has been deleted.");
+        } else {
+            return ResponseEntity.status(404).body("Student with username '" + username + "' not found.");
         }
     }
 
