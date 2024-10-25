@@ -90,6 +90,14 @@ public class Student {
             }
             return studentJPARepository.save(student);
         }
+
+        public void deleteById(Long id) {
+            studentJPARepository.deleteById(id);
+        }
+
+        public Optional<Student> findByUsername(String username) {
+            return studentJPARepository.findByUsername(username);
+        }
     }
 
 }
