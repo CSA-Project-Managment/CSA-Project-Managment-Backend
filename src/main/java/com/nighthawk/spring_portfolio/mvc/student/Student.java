@@ -81,6 +81,15 @@ public class Student {
         public List<Student> findByNameCourseTrimesterPeriod(String name, String course, int trimester, int period) {
             return studentJPARepository.findByNameCourseTrimesterPeriod(name, course, trimester, period);
         }
+
+        public Student createStudent(Student student) {
+            // Check if a student with the same username already exists to avoid duplicates
+            Optional<Student> existingStudent = studentJPARepository.findByUsername(student.getUsername());
+            if (existingStudent.isPresent()) {
+                throw new RuntimeException("A student with this username already exists.");
+            }
+            return studentJPARepository.save(student);
+        }
     }
 
 }
