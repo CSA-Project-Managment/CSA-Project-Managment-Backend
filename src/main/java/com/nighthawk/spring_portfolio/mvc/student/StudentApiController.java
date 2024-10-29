@@ -63,4 +63,21 @@ public class StudentApiController {
         }
     }
 
+    
+    @GetMapping("/findteam")
+    public ResponseEntity<Iterable<Student>> getStudentByCriteria(
+            @RequestParam String course, 
+            @RequestParam int trimester, 
+            @RequestParam int period,
+            @RequestParam int table) {
+        
+        List<Student> students = studentService.findTeam(course, trimester, period, table);
+        
+        if (students.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        } else {
+            return ResponseEntity.ok(students);
+        }
+    }
+
 }

@@ -98,6 +98,10 @@ public class Student {
         public Optional<Student> findByUsername(String username) {
             return studentJPARepository.findByUsername(username);
         }
+        
+        public List<Student> findTeam(String course, int trimester, int period, int table) {
+            return studentJPARepository.findTeam(course, trimester, period, table);
+        }
     }
 
 }
