@@ -102,6 +102,10 @@ public class Student {
         public List<Student> findTeam(String course, int trimester, int period, int table) {
             return studentJPARepository.findTeam(course, trimester, period, table);
         }
+
+        public List<Student> findPeriod(String course, int trimester, int period) {
+            return studentJPARepository.findPeriod(course, trimester, period);
+        }
     }
 
 }

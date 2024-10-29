@@ -22,6 +22,16 @@ public interface StudentJPARepository extends JpaRepository<Student, Long> {
         @Param("table") int table
     );
 
+    @Query(
+        value = "SELECT * FROM students WHERE course = :course AND trimester = :trimester AND period = :period",
+        nativeQuery = true
+    )
+    List<Student> findPeriod(
+        @Param("course") String course, 
+        @Param("trimester") int trimester, 
+        @Param("period") int period
+    );
+
 
 
     @Query(
