@@ -18,11 +18,11 @@ import org.springframework.web.bind.annotation.RestController;
 public class StudentApiController {
     
     @Autowired
-    private Student.StudentService studentService;
+    private StudentJPARepository studentJPARepository;
 
     @GetMapping("/all")
-    public ResponseEntity<Iterable<Student>> getAllFlights() {
-        return ResponseEntity.ok(studentService.findAll());
+    public ResponseEntity<Iterable<Student>> getAllStudents() {
+        return ResponseEntity.ok(studentJPARepository.findAll());
     }
 
     @GetMapping("/find")
@@ -32,7 +32,7 @@ public class StudentApiController {
             @RequestParam int trimester, 
             @RequestParam int period) {
         
-        List<Student> students = studentService.findByNameCourseTrimesterPeriod(name, course, trimester, period);
+        List<Student> students = studentJPARepository.findByNameCourseTrimesterPeriod(name, course, trimester, period);
         
         if (students.isEmpty()) {
             return ResponseEntity.notFound().build();
@@ -44,7 +44,11 @@ public class StudentApiController {
     @PostMapping("/create")
     public ResponseEntity<Student> createStudent(@RequestBody Student student) {
         try {
-            Student createdStudent = studentService.createStudent(student);
+            Optional<Student> existingStudents = studentJPARepository.findByUsername(student.getUsername());
+            if (!existingStudents.isEmpty()) {
+                throw new RuntimeException("A student with this GitHub ID already exists.");
+            }
+            Student createdStudent = studentJPARepository.save(student);
             return ResponseEntity.ok(createdStudent);
         } catch (RuntimeException e) {
             return ResponseEntity.badRequest().body(null);
@@ -53,17 +57,16 @@ public class StudentApiController {
 
     @DeleteMapping("/delete")
     public ResponseEntity<String> deleteStudentByUsername(@RequestParam String username) {
-        Optional<Student> student = studentService.findByUsername(username);
+        Optional<Student> student = studentJPARepository.findByUsername(username);
         
         if (student.isPresent()) {
-            studentService.deleteById(student.get().getId());  // Delete student by ID
+            studentJPARepository.deleteById(student.get().getId());  // Delete student by ID
             return ResponseEntity.ok("Student with username '" + username + "' has been deleted.");
         } else {
             return ResponseEntity.status(404).body("Student with username '" + username + "' not found.");
         }
     }
 
-    
     @GetMapping("/findteam")
     public ResponseEntity<Iterable<Student>> getStudentByCriteria(
             @RequestParam String course, 
@@ -71,7 +74,7 @@ public class StudentApiController {
             @RequestParam int period,
             @RequestParam int table) {
         
-        List<Student> students = studentService.findTeam(course, trimester, period, table);
+        List<Student> students = studentJPARepository.findTeam(course, trimester, period, table);
         
         if (students.isEmpty()) {
             return ResponseEntity.notFound().build();
@@ -86,15 +89,12 @@ public class StudentApiController {
         @RequestParam int trimester,
         @RequestParam int period) {
         
-            List<Student> students = studentService.findPeriod(course, trimester, period);
+        List<Student> students = studentJPARepository.findPeriod(course, trimester, period);
 
-            if (students.isEmpty()) {
-                return ResponseEntity.notFound().build();
-            } else {
-                return ResponseEntity.ok(students);
-            }
-            
+        if (students.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        } else {
+            return ResponseEntity.ok(students);
         }
-
-
+    }
 }
