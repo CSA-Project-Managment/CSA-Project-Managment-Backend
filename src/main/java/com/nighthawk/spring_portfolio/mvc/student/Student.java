@@ -78,6 +78,7 @@ public class Student {
             return studentJPARepository.findAll();
         }
 
+
         public List<Student> findByNameCourseTrimesterPeriod(String name, String course, int trimester, int period) {
             return studentJPARepository.findByNameCourseTrimesterPeriod(name, course, trimester, period);
         }

@@ -2,8 +2,11 @@ package com.nighthawk.spring_portfolio.mvc.student;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.ArrayList;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,6 +15,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import lombok.Getter;
 
 @RestController
 @RequestMapping("/api/students")
@@ -97,4 +102,23 @@ public class StudentApiController {
             return ResponseEntity.ok(students);
         }
     }
+
+    // Change this to use @Getter and studentDto
+    @PostMapping("/updatetasks")
+    public ResponseEntity<Student> updateTasks(@RequestBody Map<String, Object> requestBody) {
+        String username = (String) requestBody.get("username");
+        ArrayList<String> tasks = (ArrayList<String>) requestBody.get("tasks");
+
+        Optional<Student> student = studentJPARepository.findByUsername(username);
+
+        if (student.isPresent()) {
+            Student student1 = student.get();
+            student1.setTasks(new ArrayList<>(tasks));
+            studentJPARepository.save(student1);
+            return ResponseEntity.ok(student1);
+        }
+
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+}
+
 }
