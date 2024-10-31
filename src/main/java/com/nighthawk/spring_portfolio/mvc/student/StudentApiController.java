@@ -103,11 +103,17 @@ public class StudentApiController {
         }
     }
 
-    // Change this to use @Getter and studentDto
+    @Getter 
+    public static class StudentDto {
+        private String username;
+        private ArrayList<String> tasks;
+    }
+
+
     @PostMapping("/updatetasks")
-    public ResponseEntity<Student> updateTasks(@RequestBody Map<String, Object> requestBody) {
-        String username = (String) requestBody.get("username");
-        ArrayList<String> tasks = (ArrayList<String>) requestBody.get("tasks");
+    public ResponseEntity<Student> updateTasks(@RequestBody StudentDto studentDto) {
+        String username = (String) studentDto.getUsername();
+        ArrayList<String> tasks = (ArrayList<String>) studentDto.getTasks();
 
         Optional<Student> student = studentJPARepository.findByUsername(username);
 
