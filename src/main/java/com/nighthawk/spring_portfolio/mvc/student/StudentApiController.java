@@ -1,9 +1,8 @@
 package com.nighthawk.spring_portfolio.mvc.student;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.ArrayList;
-import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -127,4 +126,37 @@ public class StudentApiController {
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 }
 
+@Getter
+public static class TasksDto {
+    private String username;
+    private String task;
 }
+
+@PostMapping("/completeTask")
+public ResponseEntity<String> completeTask(
+    @RequestBody TasksDto tasksDto)
+    {
+
+Optional<Student> optionalStudent = studentJPARepository.findByUsername(tasksDto.getUsername());
+String task = tasksDto.getTask();
+
+if (optionalStudent.isPresent()) {
+    Student student = optionalStudent.get();
+    
+    if (student.getTasks().contains(task)) {
+        student.getTasks().remove(task);
+        student.getCompleted().add(task + " - Completed");
+        studentJPARepository.save(student); 
+        return ResponseEntity.ok("Task marked as completed.");
+    } else {
+        return ResponseEntity.badRequest().body("Task not found in the student's task list.");
+    }
+} else {
+    return ResponseEntity.status(404).body("Student not found.");
+}
+}
+
+
+}
+
+

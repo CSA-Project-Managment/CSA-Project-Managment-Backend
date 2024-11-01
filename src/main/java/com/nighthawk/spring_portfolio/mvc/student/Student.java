@@ -1,8 +1,8 @@
 package com.nighthawk.spring_portfolio.mvc.student;
 
-
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Arrays;
 
 import java.util.Optional;
@@ -35,15 +35,17 @@ public class Student {
     private int tableNumber;
     private String course;
     private ArrayList<String> tasks;
+    private ArrayList<String> completed;
     private int trimester;
     private int period;
 
-    public Student(String name, String username, int tableNumber, String course, ArrayList<String> tasks, int trimester, int period) {
+    public Student(String name, String username, int tableNumber, String course, ArrayList<String> tasks, ArrayList<String> completed, int trimester, int period) {
         this.name = name;
         this.username = username;
         this.tableNumber = tableNumber;
         this.course = course;
         this.tasks = tasks;
+        this.completed = completed;
         this.trimester = trimester;
         this.period = period;
     }
@@ -60,10 +62,10 @@ public class Student {
                 throw new RuntimeException("studentJPARepository is not initialized!");
             }
             List<Student> students = new ArrayList<>();
-            students.add(new Student("Akhil Singamneni", "Akhil353", 4, "CSA", new ArrayList<String>(Arrays.asList("Task 1", "Task 2")), 1, 3));
-            students.add(new Student("Srinivas Nampalli", "srininampalli", 4, "CSA", new ArrayList<String>(Arrays.asList("Task 1", "Task 2")), 1, 3));
-            students.add(new Student("Aditya Samavedam", "adityasamavedam", 4, "CSA", new ArrayList<String>(Arrays.asList("Task 1", "Task 2")), 1, 3));
-            students.add(new Student("Nitin Balaji", "nitinsandiego", 4, "CSA", new ArrayList<String>(Arrays.asList("Task 1", "Task 2")), 1, 3));
+            students.add(new Student("Akhil Singamneni", "Akhil353", 4, "CSA", new ArrayList<String>(Arrays.asList("Task 1", "Task 2")), new ArrayList<String>(Arrays.asList("Completed 1", "Completed 2")), 1, 3));
+            students.add(new Student("Srinivas Nampalli", "srininampalli", 4, "CSA", new ArrayList<String>(Arrays.asList("Task 1", "Task 2")), new ArrayList<String>(Arrays.asList("Completed 1", "Completed 2")), 1, 3));
+            students.add(new Student("Aditya Samavedam", "adityasamavedam", 4, "CSA", new ArrayList<String>(Arrays.asList("Task 1", "Task 2")), new ArrayList<String>(Arrays.asList("Completed 1", "Completed 2")), 1, 3));
+            students.add(new Student("Nitin Balaji", "nitinsandiego", 4, "CSA", new ArrayList<String>(Arrays.asList("Task 1", "Task 2")), new ArrayList<String>(Arrays.asList("Completed 1", "Completed 2")), 1, 3));
 
             for (Student student : students) {
             Optional<Student> existingStudent = studentJPARepository.findByUsername(student.getUsername());
@@ -77,7 +79,6 @@ public class Student {
         public Iterable<Student> findAll() {
             return studentJPARepository.findAll();
         }
-
 
         public List<Student> findByNameCourseTrimesterPeriod(String name, String course, int trimester, int period) {
             return studentJPARepository.findByNameCourseTrimesterPeriod(name, course, trimester, period);
@@ -107,6 +108,7 @@ public class Student {
         public List<Student> findPeriod(String course, int trimester, int period) {
             return studentJPARepository.findPeriod(course, trimester, period);
         }
-    }
 
+        
+    }
 }
