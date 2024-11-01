@@ -87,20 +87,6 @@ public class StudentApiController {
         }
     }
 
-    @GetMapping("/findperiod")
-    public ResponseEntity<Iterable<Student>> getPeriodByTrimester(
-        @RequestParam String course,
-        @RequestParam int trimester,
-        @RequestParam int period) {
-        
-        List<Student> students = studentJPARepository.findPeriod(course, trimester, period);
-
-        if (students.isEmpty()) {
-            return ResponseEntity.notFound().build();
-        } else {
-            return ResponseEntity.ok(students);
-        }
-    }
 
     @Getter 
     public static class StudentDto {
@@ -156,7 +142,25 @@ if (optionalStudent.isPresent()) {
 }
 }
 
+@Getter 
+    public static class PeriodDto {
+        private String course;
+        private int trimester;
+        private int period;
+    }
+
+    @GetMapping("/findperiod")
+    public ResponseEntity<Iterable<Student>> getPeriodByTrimester(
+        @RequestBody PeriodDto periodDto) {
+        
+        List<Student> students = studentJPARepository.findPeriod(periodDto.getCourse(), periodDto.getTrimester(), periodDto.getPeriod());
+
+        if (students.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        } else {
+            return ResponseEntity.ok(students);
+        }
+    }
+
 
 }
-
-
