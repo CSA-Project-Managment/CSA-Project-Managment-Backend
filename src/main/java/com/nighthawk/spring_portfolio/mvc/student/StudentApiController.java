@@ -111,36 +111,35 @@ public class StudentApiController {
 
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 }
+@Getter
+public static class TasksDto {
+    private String username;
+    private String task;
+}
 
-    @Getter
-    public static class TasksDto {
-        private String username;
-        private String task;
-    }
-
-    @PostMapping("/complete-task")
-    public ResponseEntity<String> completeTask(
-        @RequestBody TasksDto tasksDto)
-        {
-
+@PostMapping("/completeTask")
+public ResponseEntity<String> completeTask(@RequestBody TasksDto tasksDto) {
     Optional<Student> optionalStudent = studentJPARepository.findByUsername(tasksDto.getUsername());
     String task = tasksDto.getTask();
 
     if (optionalStudent.isPresent()) {
         Student student = optionalStudent.get();
-        
+        if (student.getCompleted() == null) {
+            student.setCompleted(new ArrayList<>()); 
+        }
+
         if (student.getTasks().contains(task)) {
             student.getTasks().remove(task);
             student.getCompleted().add(task + " - Completed");
-            studentJPARepository.save(student); 
+            studentJPARepository.save(student);
             return ResponseEntity.ok("Task marked as completed.");
         } else {
             return ResponseEntity.badRequest().body("Task not found in the student's task list.");
         }
     } else {
         return ResponseEntity.status(404).body("Student not found.");
-        }
     }
+}
 
         @Getter 
         public static class PeriodDto {
