@@ -29,14 +29,19 @@ public class StudentApiController {
         return ResponseEntity.ok(studentJPARepository.findAll());
     }
 
+    @Getter
+    public static class CriteriaDto {
+        private String name;
+        private String course;
+        private int trimester;
+        private int period; 
+    }
+
     @GetMapping("/find")
     public ResponseEntity<Student> getStudentByCriteria(
-            @RequestParam String name, 
-            @RequestParam String course, 
-            @RequestParam int trimester, 
-            @RequestParam int period) {
+            @RequestBody CriteriaDto criteriaDto) {
         
-        List<Student> students = studentJPARepository.findByNameCourseTrimesterPeriod(name, course, trimester, period);
+        List<Student> students = studentJPARepository.findByNameCourseTrimesterPeriod(criteriaDto.getName(), criteriaDto.getCourse(), criteriaDto.getTrimester(), criteriaDto.getPeriod());
         
         if (students.isEmpty()) {
             return ResponseEntity.notFound().build();
@@ -71,14 +76,19 @@ public class StudentApiController {
         }
     }
 
+    @Getter
+    public static class TeamDto {
+        private String course;
+        private int trimester;
+        private int period; 
+        private int table;
+    }
+
     @GetMapping("/find-team")
     public ResponseEntity<Iterable<Student>> getTeamByCriteria(
-            @RequestParam String course, 
-            @RequestParam int trimester, 
-            @RequestParam int period,
-            @RequestParam int table) {
+            @RequestBody TeamDto teamDto) {
         
-        List<Student> students = studentJPARepository.findTeam(course, trimester, period, table);
+        List<Student> students = studentJPARepository.findTeam(teamDto.getCourse(), teamDto.getTrimester(), teamDto.getPeriod(), teamDto.getTable());
         
         if (students.isEmpty()) {
             return ResponseEntity.notFound().build();
@@ -97,8 +107,8 @@ public class StudentApiController {
 
     @PostMapping("/update-tasks")
     public ResponseEntity<Student> updateTasks(@RequestBody StudentDto studentDto) {
-        String username = (String) studentDto.getUsername();
-        ArrayList<String> tasks = (ArrayList<String>) studentDto.getTasks();
+        String username =  studentDto.getUsername();
+        ArrayList<String> tasks = studentDto.getTasks();
 
         Optional<Student> student = studentJPARepository.findByUsername(username);
 
@@ -141,25 +151,25 @@ public ResponseEntity<String> completeTask(@RequestBody TasksDto tasksDto) {
     }
 }
 
-        @Getter 
-        public static class PeriodDto {
-            private String course;
-            private int trimester;
-            private int period;
-        }
+    @Getter 
+    public static class PeriodDto {
+        private String course;
+        private int trimester;
+        private int period;
+    }
 
-        @GetMapping("/find-period")
-        public ResponseEntity<Iterable<Student>> getPeriodByTrimester(
-            @RequestBody PeriodDto periodDto) {
+    @GetMapping("/find-period")
+    public ResponseEntity<Iterable<Student>> getPeriodByTrimester(
+        @RequestBody PeriodDto periodDto) {
             
-            List<Student> students = studentJPARepository.findPeriod(periodDto.getCourse(), periodDto.getTrimester(), periodDto.getPeriod());
+        List<Student> students = studentJPARepository.findPeriod(periodDto.getCourse(), periodDto.getTrimester(), periodDto.getPeriod());
 
-            if (students.isEmpty()) {
-                return ResponseEntity.notFound().build();
-            } else {
-                return ResponseEntity.ok(students);
-            }
+        if (students.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        } else {
+            return ResponseEntity.ok(students);
         }
+    }
 
 
 }
