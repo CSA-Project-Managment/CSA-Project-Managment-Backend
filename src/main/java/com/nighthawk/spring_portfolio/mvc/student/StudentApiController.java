@@ -37,7 +37,7 @@ public class StudentApiController {
         private int period; 
     }
 
-    @GetMapping("/find")
+    @PostMapping("/find")
     public ResponseEntity<Student> getStudentByCriteria(
             @RequestBody CriteriaDto criteriaDto) {
         
@@ -84,7 +84,7 @@ public class StudentApiController {
         private int table;
     }
 
-    @GetMapping("/find-team")
+    @PostMapping("/find-team")
     public ResponseEntity<Iterable<Student>> getTeamByCriteria(
             @RequestBody TeamDto teamDto) {
         
@@ -127,7 +127,7 @@ public static class TasksDto {
     private String task;
 }
 
-@PostMapping("/completeTask")
+@PostMapping("/complete-task")
 public ResponseEntity<String> completeTask(@RequestBody TasksDto tasksDto) {
     Optional<Student> optionalStudent = studentJPARepository.findByUsername(tasksDto.getUsername());
     String task = tasksDto.getTask();
@@ -158,7 +158,7 @@ public ResponseEntity<String> completeTask(@RequestBody TasksDto tasksDto) {
         private int period;
     }
 
-    @GetMapping("/find-period")
+    @PostMapping("/find-period")
     public ResponseEntity<Iterable<Student>> getPeriodByTrimester(
         @RequestBody PeriodDto periodDto) {
             
