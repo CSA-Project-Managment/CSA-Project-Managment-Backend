@@ -64,7 +64,7 @@ public class StudentApiController {
         }
     }
 
-    @DeleteMapping("/delete")
+    @PostMapping("/delete")
     public ResponseEntity<String> deleteStudentByUsername(@RequestParam String username) {
         Optional<Student> student = studentJPARepository.findByUsername(username);
         
