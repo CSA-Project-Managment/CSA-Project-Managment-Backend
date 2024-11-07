@@ -110,11 +110,18 @@ public class StudentApiController {
         String username =  studentDto.getUsername();
         ArrayList<String> tasks = studentDto.getTasks();
 
+
         Optional<Student> student = studentJPARepository.findByUsername(username);
 
         if (student.isPresent()) {
             Student student1 = student.get();
-            student1.setTasks(new ArrayList<>(tasks));
+            ArrayList<String> newTasks = student1.getTasks();
+            
+            for (String task: tasks) {
+                newTasks.add(task);
+            }
+            
+            student1.setTasks(newTasks);
             studentJPARepository.save(student1);
             return ResponseEntity.ok(student1);
         }
