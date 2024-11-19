@@ -7,7 +7,6 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -177,6 +176,36 @@ public ResponseEntity<String> completeTask(@RequestBody TasksDto tasksDto) {
             return ResponseEntity.ok(students);
         }
     }
+  @Getter
+    public static class ProgressDto {
+    private int table;
+    }
 
+    @GetMapping("/progress")
+    public ResponseEntity<Integer> getProgress(@RequestBody ProgressDto progressDto) {
+       int table = progressDto.getTable();
+
+       List<Student> allStudents = studentJPARepository.findAll();
+       List<Student> studentsAtTable = new ArrayList<>(); //To match all the specific ones at a certain point ---- EXPPECTED TABLE PARSING MATCH LOGIC 
+
+       for (Student student : allStudents) { // ALL Students are meant to go throguh the entire allStudents
+        if (student.getTableNumber() == table) { // if that is equal to requesteed table
+            studentsAtTable.add(student);
+        }
+    }
+    if (studentsAtTable.isEmpty()) {
+        System.out.println("No students found for table " + table);
+        return ResponseEntity.status(404).body(null); // No students at the specified table
+    }
+
+   int totalCompletedTasks = 0;
+   int totalPossibleTasks = 0; 
+
+    int progress = (totalCompletedTasks * 100) / (totalPossibleTasks + totalCompletedTasks);
+    return ResponseEntity.ok(progress); 
+
+
+
+    }
 
 }
